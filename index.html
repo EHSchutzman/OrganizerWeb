@@ -1,0 +1,223 @@
+<html lang="en">
+
+<head>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="materialize/css/materialize.min.css" media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="extra.css"/>
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8"/>
+</head>
+
+<body onload="loadAllCalendars()">
+
+    <nav>
+        <div class="nav-wrapper">
+          <a href="#" class="brand-logo center">Calendar Organizer</a>
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><h5 id="loaded_calendar" style="margin-bottom:3px;margin-right: 5px;padding-top: 5px"></h5></li>
+          </ul>
+        </div>
+      </nav>
+
+
+<div class="row">
+    <ul class="collapsible col s6">
+        <li>
+            <div class="collapsible-header"><i class="material-icons">calendar_today</i>Create Calendar</div>
+            <div class="collapsible-body">
+
+                <div class="row">
+                    <form class="col s12">
+
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="calendar_name" type="text" class="validate">
+                                <label for="calendar_name">Calendar Name</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6">
+
+                                <input id="starting_date" type="text" class="validate">
+                                <label for="starting_date">Starting Date</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <input id="ending_date" type="text" class="validate">
+                                <label for="ending_date">Ending Date</label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <input id="early_hour" type="text" class="validate">
+                                <label for="early_hour">Early Hour</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <input id="late_hour" type="text" class="validate">
+                                <label for="late_hour">Late Hour</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s5">
+                                <input id="meeting_duration" type="number" class="validate">
+                                <label for="meeting_duration">Meeting Duration</label>
+
+                            </div>
+                            <div class="col s7">
+                                <a class="waves-effect waves-light btn-large" onclick="createCalendar()" style="top: 5px">
+                                    <i class="material-icons left">send</i>Create</a>
+
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </li>
+        <li>
+            <div class="collapsible-header"><i class="material-icons">calendar_today</i>Load Calendar</div>
+            <div class="collapsible-body">
+
+                <div class="row">
+                    <ul class="collection with-header" id="available_calendars">
+
+                        <li class="collection-header"><h4>Available Calendars</h4></li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+        </li>
+        <li>
+            <div class="collapsible-header"><i class="material-icons">schedule</i>Schedule Meetings</div>
+            <div class="collapsible-body">
+
+                <div class="row">
+                    
+                    
+                    <form class="col s12">
+
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="meeting_date" type="text" class="validate">
+                                <label for="meeting_date">Meeting Date</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="meeting_time" type="text" class="validate">
+                                <label for="meeting_time">Meeting Time</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="meeting_attendee" type="text" class="validate">
+                                <label for="meeting_attendee">Attendee</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="meeting_location" type="text" class="validate">
+                                <label for="meeting_location">Meeting Location</label>
+                            </div>
+                        </div>
+                        <div class="col s12">
+                            <a class="waves-effect waves-light btn-large right"  style="top: 5px">
+                                <i class="material-icons left">send</i>Schedule Meeting</a>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </li>
+
+        <li>
+            <div class="collapsible-header"><i class="material-icons">block</i>Block Meetings</div>
+            <div class="collapsible-body">
+
+                <div class="row">
+                    
+                    
+                    <form class="col s12">
+
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="block_meeting_date" type="text" class="validate">
+                                <label for="block_meeting_date">Meeting Date</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="block_meeting_time" type="text" class="validate">
+                                <label for="block_meeting_time">Meeting Time</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="block_meeting_day_of_week" type="text" class="validate">
+                                <label for="block_meeting_day_of_week">Day of Week</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s4">
+                                <a class="waves-effect waves-light btn-large right"  style="top: 5px">
+                                    <i class="material-icons left">send</i>Block Meeting</a>
+                            </div>
+                         
+                        </div>
+                    </form>
+                </div>
+
+
+            </div>
+        </li>
+    </ul>
+    <div class="col s1"></div>
+
+    <!-- End of calendar cerate dropdown -->
+    <!--<div class="col s4">-->
+        <!--<div class="input-field col s6">-->
+            <!--<input id="load_calendar" type="text" class="validate">-->
+            <!--<label for="load_calendar" data-error="wrong" data-success="right">Load Calendar</label>-->
+        <!--</div>-->
+        <!--<div class="col s6" >-->
+            <!--<a onclick="loadCalendar()" class="waves-effect waves-light btn-large" style="top: 5px"><i class="material-icons left">cloud_download</i>Load</a>-->
+
+        <!--</div>-->
+
+    <!--</div>-->
+
+    <!--<div class="col s4">-->
+        <!--<div class="input-field col s6">-->
+            <!--<input id="delete_calendar" type="text" class="validate">-->
+            <!--<label for="delete_calendar" data-error="wrong" data-success="right">Delete Calendar</label>-->
+        <!--</div>-->
+        <!--<div class="col s6" >-->
+            <!--<a onclick="deleteCalendar()" class="waves-effect waves-light btn-large" style="top: 5px"><i class="material-icons left">delete_forever</i>Delete</a>-->
+
+        <!--</div>-->
+
+    <!--</div>-->
+
+
+
+</div>
+
+
+
+<!--Import jQuery before materialize.js-->
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="materialize/js/materialize.min.js"></script>
+<script type="text/javascript" src="scripts.js"></script>
+</body>
+
+</html>
