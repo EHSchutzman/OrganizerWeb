@@ -37,6 +37,7 @@ function calendar_created() {
     var data = this.responseText;
     console.log("Returned created calendar");
     console.log(JSON.parse(data))
+    writeOutput("Successfully cerated calendar " + data.calendar_name)
 
 
 }
@@ -62,6 +63,7 @@ function calendar_loaded() {
     var data = JSON.parse(this.responseText);
     console.log(data)
     document.getElementById('loaded_calendar').innerHTML = data.calendar_name
+    writeOutput("Successfully loaded calendar " + data.calendar_name)
 
 }
 
@@ -86,9 +88,12 @@ function calendar_deleted() {
         //handle error
     }
     console.log("returned delete")
-    var data = this.responseText;
+    var data = JSON.parse(this.responseText);
     console.log(data)
 
+    var str = "Successfully Deleted Calendar:  " + data.calendar_name
+
+    writeOutput(str)
 
 }
 
@@ -120,3 +125,15 @@ function loadAllCalendars(){
 
 
 }
+
+function writeOutput(str){
+    console.log("writing output")
+    console.log(str)
+    var output_area = document.getElementById('output_area')
+
+    output_area.innerHTML=
+    `<textarea disabled id="textarea1" class="materialize-textarea">`+ str + `</textarea>`
+}
+
+$('#textarea1').val('New Text');
+M.textareaAutoResize($('#textarea1'));
