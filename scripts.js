@@ -37,7 +37,7 @@ function calendar_created() {
     var data = JSON.parse(this.responseText);
     console.log("Returned created calendar");
     console.log(data)
-    writeOutput("Successfully cerated calendar " + data.calendar_name)
+    writeOutput("Successfully created calendar " + data.calendar_name)
 
 
 }
