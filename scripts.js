@@ -34,9 +34,9 @@ function calendar_created() {
         //handle error
     }
 
-    var data = this.responseText;
+    var data = JSON.parse(this.responseText);
     console.log("Returned created calendar");
-    console.log(JSON.parse(data))
+    console.log(data)
     writeOutput("Successfully cerated calendar " + data.calendar_name)
 
 
