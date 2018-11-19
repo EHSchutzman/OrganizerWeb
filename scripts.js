@@ -68,7 +68,6 @@ function calendar_loaded() {
 }
 
 
-
 function deleteCalendar(calendar_name) {
     var calendar = {"calendar_name": calendar_name};
     console.log("Delteing calendar")
@@ -98,42 +97,207 @@ function calendar_deleted() {
 }
 
 
-function loadAllCalendars(){
-    var createdList = ""
-    var available_calendars = document.getElementById('available_calendars')
-    var calendars = [
-        {"calendar_name": "test"},
-        {"calendar_name": "Personal"},
-        {"calendar_name": "Private"},
-        {"calendar_name": "Work"}
+function loadAllCalendars() {
 
-    ]
-
-    calendars.forEach(calendar=>{
-        var li = document.createElement('li')
-        li.innerText = calendar.calendar_name;
-        li.setAttribute("class", "collection-item")
-
-        var innerHTMLToBe = `<div>` + calendar.calendar_name +`<a onclick="loadCalendar('`+ calendar.calendar_name.toString()+`')" class="secondary-content"><i class="material-icons">send</i></a><a onclick="deleteCalendar('`+ calendar.calendar_name.toString()+`')" class="secondary-content"><i class="material-icons">delete</i></a></div>`;
-
-        li.innerHTML = innerHTMLToBe
-        available_calendars.append(li)
-            console.log(calendar)
-
-            // <li class="collection-item"><div>Alvin<a href="#!" class="secondary-content"><i class="material-icons">send</i></a></div></li>
-    })
+    var xhr = new XMLHttpRequest()
+    xhr.onreadystatechange = load_all_calendars;
+    xhr.open("GET", url + "/Alpha/calendar/all");
+    xhr.send();
 
 
 }
 
-function writeOutput(str){
+function load_all_calendars() {
+    if (this.readyState !== 4) return;
+    if (this.status !== 200) {
+        //handle error
+    }
+    console.log("ALL CALENDARS")
+    console.log(this.responseText)
+    var calendars = JSON.parse(this.responseText).calendars
+    console.log(calendars)
+    document.getElementById("available_calendars").innerHTML = ""
+    calendars.forEach(calendar => {
+        var li = document.createElement('li')
+        li.innerText = calendar.name;
+        li.setAttribute("class", "collection-item")
+
+        var innerHTMLToBe = `<div>` + calendar.name + `<a onclick="loadCalendar('` + calendar.name.toString() + `')" class="secondary-content"><i class="material-icons">send</i></a><a onclick="deleteCalendar('` + calendar.name.toString() + `')" class="secondary-content"><i class="material-icons">delete</i></a></div>`;
+
+        li.innerHTML = innerHTMLToBe
+        available_calendars.append(li)
+        console.log(calendar)
+
+    })
+}
+
+function writeOutput(str) {
     console.log("writing output")
     console.log(str)
     var output_area = document.getElementById('output_area')
 
-    output_area.innerHTML=
-    `<textarea disabled id="textarea1" class="materialize-textarea">`+ str + `</textarea>`
+    output_area.innerHTML =
+        `<textarea disabled id="textarea1" class="materialize-textarea">` + str + `</textarea>`
 }
 
-$('#textarea1').val('New Text');
-M.textareaAutoResize($('#textarea1'));
+function getDailySchedule() {
+    var date = document.getElementById('daily_schedule_date').value
+}
+
+
+function scheduleMeeting() {
+    console.log("HERE")
+    var date = document.getElementById('meeting_date').value
+    var time = document.getElementById('meeting_time').value
+
+    date = date + " " + time
+    var attendee = document.getElementById('meeting_attendee').value
+
+
+    var location = document.getElementById("meeting_location").value
+    var calendar_name = document.getElementById('loaded_calendar').innerText
+    if (!calendar_name) {
+        alert("Please load a calendar")
+        return
+    }
+    var name = "Meeting with " + attendee
+    console.log(calendar_name)
+    var obj = {
+        "name": name,
+        "uid": Date.now().toString(),
+        "start_time": date,
+        "location": location,
+        "attendee": attendee,
+        "calendar_name": calendar_name
+    }
+
+    var xhr = new XMLHttpRequest()
+    xhr.onreadystatechange = schedule_meeting;
+    xhr.open("POST", url + "/Alpha/meeting/schedule");
+    xhr.send(JSON.stringify(obj));
+
+}
+
+function schedule_meeting() {
+    if (this.readyState !== 4) return;
+    if (this.status !== 200) {
+        //handle error
+    }
+    var str = "";
+    console.log("Schedule respoonse")
+    console.log(this.responseText)
+
+    var data = JSON.parse(this.responseText)
+    if (data.status !== "success") {
+        str = "Failed to schedule meeting"
+    }else{
+        str = "Successfuly Scheduled " + data.meeting_name
+
+    }
+
+    writeOutput(str)
+}
+
+
+function cancelMeeting() {
+    console.log("here")
+
+    var date = document.getElementById('block_meeting_date').value
+    var time = document.getElementById('block_meeting_time').value
+    var calendar_name = document.getElementById('loaded_calendar').innerText
+    if (!calendar_name) {
+        alert("Please load a calendar")
+        return
+    }
+    var obj = {
+        "calendar_name": calendar_name,
+        "start_time": date + " " + time
+    }
+    console.log(obj)
+
+    var xhr = new XMLHttpRequest()
+    xhr.onreadystatechange = cancel_meeting;
+    xhr.open("POST", url + "/Alpha/meeting/delete");
+    xhr.send(JSON.stringify(obj));
+
+
+}
+
+function cancel_meeting(){
+    if (this.readyState !== 4) return;
+    if (this.status !== 200) {
+        //handle error
+    }
+    var str = "";
+    console.log("Cancel Response")
+    console.log(this.responseText)
+
+    var data = JSON.parse(this.responseText)
+    if (data.status !== "success") {
+        str = "Failed to Cancel Meeting"
+    }else{
+        str = "Successfuly Canceled Meeting"
+    }
+
+    writeOutput(str)
+}
+
+function getMonthlySchedule(){
+    var date = document.getElementById('monthly_schedule_month').value
+    var calendar_name = document.getElementById('loaded_calendar').innerText
+
+    if (!calendar_name) {
+        alert("Please load a calendar")
+        return
+    }
+    console.log(date)
+    var xhr = new XMLHttpRequest()
+    xhr.onreadystatechange = monthly_schedule;
+    xhr.open("GET", url + "/Alpha/schedule?date=" +date  + '&calendar_name=' + calendar_name);
+    xhr.send();
+
+}
+
+function monthly_schedule(){
+    if (this.readyState !== 4) return;
+    if (this.status !== 200) {
+        //handle error
+    }
+    console.log("HERE")
+    console.log(JSON.parse(this.responseText))
+    var data = JSON.parse(this.responseText)
+    console.log(data)
+
+    writeOutput(this.responseText)
+}
+
+function getDailySchedule(){
+    var date = document.getElementById('daily_schedule_date').value
+    var calendar_name = document.getElementById('loaded_calendar').innerText
+
+    if (!calendar_name) {
+        alert("Please load a calendar")
+        return
+    }
+    console.log(date)
+
+    var xhr = new XMLHttpRequest()
+    xhr.onreadystatechange = daily_schedule;
+    xhr.open("GET", url + "/Alpha/schedule?date=" +date  + '&calendar_name=' + calendar_name);
+    xhr.send();
+    console.log("SENT")
+}
+
+function daily_schedule(){
+    if (this.readyState !== 4) return;
+
+    if (this.status !== 200) {
+        //handle error
+    }
+    console.log("HERE")
+    console.log(JSON.parse(this.responseText))
+    var data = JSON.parse(this.responseText)
+    console.log(data)
+
+    writeOutput(this.responseText)
+}
