@@ -18,7 +18,6 @@ function createCalendar() {
         "meeting_duration": meeting_duration
     }
 
-    console.log(newCal)
 
     var xhr = new XMLHttpRequest()
     xhr.onreadystatechange = calendar_created;
@@ -35,8 +34,6 @@ function calendar_created() {
     }
 
     var data = JSON.parse(this.responseText);
-    console.log("Returned created calendar");
-    console.log(data)
     writeOutput("Successfully created calendar " + data.calendar_name)
 
 
@@ -45,7 +42,6 @@ function calendar_created() {
 
 function loadCalendar(calendar_name) {
 
-    console.log("Loading calendar " + calendar_name)
     var xhr = new XMLHttpRequest()
     xhr.onreadystatechange = calendar_loaded;
     xhr.open("GET", url + "/Alpha/calendar/load?calendar_name=" + calendar_name);
@@ -59,9 +55,7 @@ function calendar_loaded() {
     if (this.status !== 200) {
         //handle error
     }
-    console.log("returned")
     var data = JSON.parse(this.responseText);
-    console.log(data)
     document.getElementById('loaded_calendar').innerHTML = data.calendar_name
     writeOutput("Successfully loaded calendar " + data.calendar_name)
 
@@ -70,8 +64,6 @@ function calendar_loaded() {
 
 function deleteCalendar(calendar_name) {
     var calendar = {"calendar_name": calendar_name};
-    console.log("Delteing calendar")
-    console.log(calendar)
 
 
     var xhr = new XMLHttpRequest()
@@ -86,9 +78,7 @@ function calendar_deleted() {
     if (this.status !== 200) {
         //handle error
     }
-    console.log("returned delete")
     var data = JSON.parse(this.responseText);
-    console.log(data)
 
     var str = "Successfully Deleted Calendar:  " + data.calendar_name
 
@@ -112,10 +102,7 @@ function load_all_calendars() {
     if (this.status !== 200) {
         //handle error
     }
-    console.log("ALL CALENDARS")
-    console.log(this.responseText)
     var calendars = JSON.parse(this.responseText).calendars
-    console.log(calendars)
     document.getElementById("available_calendars").innerHTML = ""
     calendars.forEach(calendar => {
         var li = document.createElement('li')
@@ -126,18 +113,15 @@ function load_all_calendars() {
 
         li.innerHTML = innerHTMLToBe
         available_calendars.append(li)
-        console.log(calendar)
 
     })
 }
 
 function writeOutput(str) {
-    console.log("writing output")
-    console.log(str)
     var output_area = document.getElementById('output_area')
-
-    output_area.innerHTML =
-        `<textarea disabled id="textarea1" class="materialize-textarea">` + str + `</textarea>`
+    output_area.style ="text-align:center"
+    output_area.innerText =
+        str
 }
 
 function getDailySchedule() {
@@ -146,7 +130,6 @@ function getDailySchedule() {
 
 
 function scheduleMeeting() {
-    console.log("HERE")
     var date = document.getElementById('meeting_date').value
     var time = document.getElementById('meeting_time').value
 
@@ -161,7 +144,6 @@ function scheduleMeeting() {
         return
     }
     var name = "Meeting with " + attendee
-    console.log(calendar_name)
     var obj = {
         "name": name,
         "uid": Date.now().toString(),
@@ -184,8 +166,6 @@ function schedule_meeting() {
         //handle error
     }
     var str = "";
-    console.log("Schedule respoonse")
-    console.log(this.responseText)
 
     var data = JSON.parse(this.responseText)
     if (data.status !== "success") {
@@ -200,7 +180,6 @@ function schedule_meeting() {
 
 
 function cancelMeeting() {
-    console.log("here")
 
     var date = document.getElementById('block_meeting_date').value
     var time = document.getElementById('block_meeting_time').value
@@ -213,7 +192,6 @@ function cancelMeeting() {
         "calendar_name": calendar_name,
         "start_time": date + " " + time
     }
-    console.log(obj)
 
     var xhr = new XMLHttpRequest()
     xhr.onreadystatechange = cancel_meeting;
@@ -229,8 +207,6 @@ function cancel_meeting(){
         //handle error
     }
     var str = "";
-    console.log("Cancel Response")
-    console.log(this.responseText)
 
     var data = JSON.parse(this.responseText)
     if (data.status !== "success") {
@@ -250,7 +226,6 @@ function getMonthlySchedule(){
         alert("Please load a calendar")
         return
     }
-    console.log(date)
     var xhr = new XMLHttpRequest()
     xhr.onreadystatechange = monthly_schedule;
     xhr.open("GET", url + "/Alpha/schedule?date=" +date  + '&calendar_name=' + calendar_name);
@@ -263,12 +238,9 @@ function monthly_schedule(){
     if (this.status !== 200) {
         //handle error
     }
-    console.log("HERE")
-    console.log(JSON.parse(this.responseText))
     var data = JSON.parse(this.responseText)
-    console.log(data)
 
-    writeOutput(this.responseText)
+    printSchedule(sortByKey(data.meetings, 'startTime'))
 }
 
 function getDailySchedule(){
@@ -279,13 +251,11 @@ function getDailySchedule(){
         alert("Please load a calendar")
         return
     }
-    console.log(date)
 
     var xhr = new XMLHttpRequest()
     xhr.onreadystatechange = daily_schedule;
     xhr.open("GET", url + "/Alpha/schedule?date=" +date  + '&calendar_name=' + calendar_name);
     xhr.send();
-    console.log("SENT")
 }
 
 function daily_schedule(){
@@ -294,10 +264,28 @@ function daily_schedule(){
     if (this.status !== 200) {
         //handle error
     }
-    console.log("HERE")
-    console.log(JSON.parse(this.responseText))
     var data = JSON.parse(this.responseText)
-    console.log(data)
 
-    writeOutput(this.responseText)
+    printSchedule(sortByKey(data.meetings, 'startTime'))
+}
+
+function printSchedule(schedule){
+    console.log("PRINTING SCHEDULE")
+    console.log(schedule)
+
+    var str = ""
+    schedule.forEach(meeting=>{
+        str += "\n----------------\n"
+        str += meeting.name +'\n'
+        str += meeting.startTime +'\n'
+    })
+    console.log(str)
+    writeOutput(str)
+}
+
+function sortByKey(array, key) {
+    return array.sort(function(a, b) {
+        var x = a[key]; var y = b[key];
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
 }
