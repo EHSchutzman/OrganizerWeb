@@ -270,16 +270,16 @@ function daily_schedule(){
 }
 
 function printSchedule(schedule){
-    console.log("PRINTING SCHEDULE")
-    console.log(schedule)
 
     var str = ""
     schedule.forEach(meeting=>{
         str += "\n----------------\n"
         str += meeting.name +'\n'
         str += meeting.startTime +'\n'
+        if(meeting.location !== ""){
+            str+="Location: " +  meeting.location + '\n'
+        }
     })
-    console.log(str)
     writeOutput(str)
 }
 
