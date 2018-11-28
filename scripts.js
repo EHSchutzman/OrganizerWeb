@@ -41,7 +41,7 @@ function calendar_created() {
 
 
 function loadCalendar(calendar_name) {
-
+    console.log(calendar_name)
     var xhr = new XMLHttpRequest()
     xhr.onreadystatechange = calendar_loaded;
     xhr.open("GET", url + "/Alpha/calendar/load?calendar_name=" + calendar_name);
@@ -55,9 +55,10 @@ function calendar_loaded() {
     if (this.status !== 200) {
         //handle error
     }
+    console.log(this.responseText)
     var data = JSON.parse(this.responseText);
-    document.getElementById('loaded_calendar').innerHTML = data.calendar_name
-    writeOutput("Successfully loaded calendar " + data.calendar_name)
+    document.getElementById('loaded_calendar').innerHTML = data.name
+    writeOutput("Successfully loaded calendar " + data.name)
 
 }
 
