@@ -11,14 +11,14 @@ function createCalendar() {
 
     var newCal = {
         "calendar_name": calendar_name,
-        "start_date": new Date(starting_date),
-        "ending_date": new Date(ending_date),
-        "early_hour": early_hour,
-        "late_hour": late_hour,
+        "start_date": starting_date,
+        "end_date": ending_date,
+        "start_time": early_hour + ":00",
+        "end_time": late_hour + ":00",
         "meeting_duration": meeting_duration
     }
 
-
+    console.log(newCal)
     var xhr = new XMLHttpRequest()
     xhr.onreadystatechange = calendar_created;
     xhr.open("POST", url + '/Alpha/calendar/create');
@@ -84,6 +84,7 @@ function calendar_deleted() {
     var str = "Successfully Deleted Calendar:  " + data.calendar_name
 
     writeOutput(str)
+    loadAllCalendars()
 
 }
 
@@ -289,4 +290,138 @@ function sortByKey(array, key) {
         var x = a[key]; var y = b[key];
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
     });
+}
+
+function addDayToCalendar(){
+    var date = document.getElementById('add_day').value 
+    var calendar_name = document.getElementById('loaded_calendar').innerText
+
+    if(date === null){
+        alert("Please enter a date in the format YYYY-MM-DD")
+        return
+    }
+
+    console.log(calendar_name)
+    if(calendar_name === undefined){
+        alert("No Calendar Loaded")
+        return
+    }
+    console.log(date)
+
+    var obj = {}
+
+    obj["calendar_name"] = calendar_name
+    obj["date"] = date
+    console.log(obj)
+    var xhr = new XMLHttpRequest()
+    xhr.onreadystatechange = add_day;
+    xhr.open("POST", url + "/Alpha/calendar/add-day");
+    xhr.send(JSON.stringify(obj));
+
+}
+
+function add_day(){
+    if (this.readyState !== 4) return;
+
+    if (this.status !== 200) {
+        //handle error
+    }
+
+    console.log(JSON.parse(this.responseText))
+}
+
+function removeDayFromCalendar(){
+    var date = document.getElementById('remove_day').value 
+    var calendar_name = document.getElementById('loaded_calendar').innerText
+
+    if(date === null){
+        alert("Please enter a date in the format YYYY-MM-DD")
+        return
+    }
+
+    console.log(calendar_name)
+    if(calendar_name === undefined){
+        alert("No Calendar Loaded")
+        return
+    }
+    console.log(date)
+
+    var obj = {}
+
+    obj["calendar_name"] = calendar_name
+    obj["date"] = date
+    console.log(obj)
+    var xhr = new XMLHttpRequest()
+    xhr.onreadystatechange = remove_day;
+    xhr.open("POST", url + "/Alpha/calendar/remove-day");
+    xhr.send(JSON.stringify(obj));
+
+}
+
+function remove_day(){
+    if (this.readyState !== 4) return;
+
+    if (this.status !== 200) {
+        //handle error
+    }
+
+    console.log(JSON.parse(this.responseText))
+}
+
+
+
+function closeTimeslot(){
+    var date = document.getElementById('close_timeslot_date').value
+    var time = document.getElementById('close_timeslot_time').value
+    var name = document.getElementById('loaded_calendar').innerText
+    if(date === null){
+        alert("Please enter a date")
+        return
+    }
+    if(time === null){
+        alert("Please enter a time")
+        return
+    }
+
+    var obj = {
+        "name": "BLOCKED TIME SLOT",
+        "uid": Date.now().toString(),
+        "start_time": date.toString() + " " + time.toString(),
+        "attendee": "BLOCKED",
+        "calendar_name": name,
+        "location": ""
+    }
+
+    var xhr = new XMLHttpRequest()
+    xhr.onreadystatechange = timeslot_closed;
+    xhr.open("POST", url + "/Alpha/meeting/schedule");
+    xhr.send(JSON.stringify(obj));
+    console.log(obj)
+}
+
+function timeslot_closed(){
+    if (this.readyState !== 4) return;
+    if (this.status !== 200) {
+        //handle error
+    }
+    var str = "";
+
+    var data = JSON.parse(this.responseText)
+    console.log("RESPONSE")
+    console.log(data)
+    if (data.status !== "success") {
+        str = "Failed to block meeting"
+    }else{
+        str = "Successfuly Blocked Meeting"
+
+    }
+
+    writeOutput(str)
+}
+
+function blockAllDaysAtTime(){
+
+
+
+"    /Alpha/calendar/block-time-slot"
 }

@@ -151,7 +151,7 @@
                         <div class="row">
                             <div class="col s4">
                                 <a onclick="scheduleMeeting()" class="waves-effect waves-light btn-large right" style="top: 5px">
-                                    <i class="material-icons left">send</i>Block Meeting</a>
+                                    <i class="material-icons left">send</i>Schedule Meeting</a>
                             </div>
 
                         </div>
@@ -200,7 +200,7 @@
 
             </div>
         </li>
-
+        <!-- Get Schedules -- Daily/Monthly -->
         <li>
             <div class="collapsible-header"><i class="material-icons">schedule</i>Get Schedules</div>
             <div class="collapsible-body">
@@ -243,6 +243,84 @@
                         </div>
                     </form>
                 </div>
+            </div>
+        </li>
+
+        <!-- Add Day to Calendar -->
+        <li>
+            <div class="collapsible-header"><i class="material-icons">schedule</i>Add/Remove Day from Calendar</div>
+            <div class="collapsible-body">
+                <div class="row">
+                    <form class="col s6">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="add_day" type="text" class="validate">
+                                <label for="add_day">Date</label>
+                                <span class="helper-text" data-error="wrong" data-success="right">YYYY-MM-DD</span>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12">
+                                <a onclick="addDayToCalendar()" class="waves-effect waves-light left-align btn" style="top: 5px">
+                                    <i class="material-icons left">send</i>Add Day </a>
+                            </div>
+
+                        </div>
+                    </form>
+                    <form class="col s6">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="remove_day" type="text" class="validate">
+                                <label for="remove_day">Date</label>
+                                <span class="helper-text" data-error="wrong" data-success="right">YYYY-MM-DD</span>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12">
+                                <a onclick="removeDayFromCalendar()" class="waves-effect waves-light left-align btn" style="top: 5px">
+                                    <i class="material-icons left">send</i>Remove Day</a>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </li>
+
+        <li>
+            <div class="collapsible-header"><i class="material-icons">schedule</i>Close Timeslot</div>
+            <div class="collapsible-body">
+                <div class="row">
+                    <form class="col s12">
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <input id="close_timeslot_date" type="text" class="validate">
+                                <label for="close_timeslot_date">Date</label>
+                                <span class="helper-text" data-error="wrong" data-success="right">YYYY-MM-DD</span>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <input id="close_timeslot_time" type="text" class="validate">
+                                <label for="close_timeslot_time">Time</label>
+                                <span class="helper-text" data-error="wrong" data-success="right">HH:MM 24h</span>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s6">
+                                <a onclick="closeTimeslot()" class="waves-effect waves-light left-align btn" style="top: 5px">
+                                    <i class="material-icons left">send</i>Close Meeting</a>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+
             </div>
         </li>
     </ul>
